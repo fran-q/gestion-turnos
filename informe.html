@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informe de modificaciones - 2 Parcial Programacion III</title>
+<style>
+    @page { size: A4; margin: 15mm 14mm; }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 10pt;
+        line-height: 1.35;
+        color: #1a1a1a;
+    }
+
+    h1 {
+        margin: 0 0 2px;
+        font-size: 17pt;
+        color: #002855;
+    }
+
+    .subtitulo {
+        margin: 0 0 14px;
+        color: #555;
+        font-size: 10pt;
+    }
+
+    h2 {
+        margin: 13px 0 6px;
+        padding-bottom: 3px;
+        border-bottom: 1.5px solid #002855;
+        font-size: 12pt;
+        color: #002855;
+    }
+
+    h3 {
+        margin: 11px 0 4px;
+        font-size: 10.5pt;
+        color: #002855;
+    }
+
+    p { margin: 0 0 7px; }
+
+    .datos {
+        margin-bottom: 14px;
+        padding: 9px 12px;
+        background: #f4f6fa;
+        border-left: 3px solid #002855;
+        font-size: 10pt;
+    }
+
+    .datos div { margin-bottom: 3px; }
+    .datos div:last-child { margin-bottom: 0; }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 7px 0 10px;
+        font-size: 9.5pt;
+    }
+
+    th, td {
+        padding: 5px 8px;
+        text-align: left;
+        border: 1px solid #d5dae3;
+        vertical-align: top;
+    }
+
+    th { background: #eef1f6; color: #002855; }
+
+    code {
+        padding: 1px 4px;
+        background: #f0f2f6;
+        border-radius: 3px;
+        font-family: Consolas, monospace;
+        font-size: 9pt;
+    }
+
+    pre {
+        margin: 5px 0 9px;
+        padding: 8px 10px;
+        background: #f6f7f9;
+        border-left: 3px solid #9aa5b5;
+        font-family: Consolas, monospace;
+        font-size: 8.3pt;
+        line-height: 1.35;
+        white-space: pre-wrap;
+    }
+
+    ul { margin: 4px 0 8px; padding-left: 20px; }
+    li { margin-bottom: 2px; }
+
+    /* ---- Capturas: grandes y legibles ---- */
+    .captura {
+        margin: 0 0 14px;
+        page-break-inside: avoid;
+    }
+
+    .captura img {
+        display: block;
+        width: 100%;
+        max-height: 118mm;
+        object-fit: contain;
+        border: 1px solid #c9cfda;
+        border-radius: 3px;
+    }
+
+    .captura .pie {
+        margin-top: 4px;
+        color: #555;
+        font-size: 9pt;
+        font-style: italic;
+    }
+
+    .pagina-nueva { page-break-before: always; }
+
+    .nota {
+        padding: 7px 10px;
+        background: #fff8e6;
+        border-left: 3px solid #d9a200;
+        font-size: 9.5pt;
+    }
+</style>
+</head>
+<body>
+
+<h1>Ampliación del Sistema de Gestión de Turnos Médicos</h1>
+<p class="subtitulo">Informe de modificaciones &middot; 2.º Parcial de Programación III &middot; CENT 35 &middot; 2026</p>
+
+<div class="datos">
+    <div><strong>Integrante:</strong> Quiroga Francisco</div>
+    <div><strong>Repositorio:</strong> https://github.com/fran-q/gestion-turnos</div>
+    <div><strong>Fecha de entrega:</strong> 13 de noviembre de 2026</div>
+</div>
+
+<h2>1. Validaciones incorporadas</h2>
+
+<h3>1.1. El equipo debe ser compatible con la práctica solicitada</h3>
+<p>
+Antes de este cambio se podía reservar una radiografía asignando un ecógrafo: el sistema
+verificaba que ambos identificadores existieran, pero no que pudieran usarse juntos. La
+validación consulta la tabla <code>practica_equipo</code>, que indica qué equipos sirven
+para cada práctica, y rechaza la operación cuando la combinación no es válida.
+</p>
+<h3>1.2. Un paciente no puede tener turnos superpuestos</h3>
+<p>
+La versión anterior comparaba únicamente la hora exacta, de modo que dos estudios de
+sesenta minutos a las 10:00 y a las 10:30 se aceptaban aunque se pisaran. Ahora cada turno
+ocupa el intervalo que va desde su hora hasta la hora más la duración de su práctica
+(<code>practica.duracion</code>), y se rechaza cualquier turno cuyo intervalo se cruce con
+otro ya reservado. La misma comprobación se aplica a la disponibilidad del equipo.
+</p>
+<h2>2. Mejora funcional: búsqueda y filtros de turnos</h2>
+<p>
+Se incorporó la posibilidad de consultar los turnos filtrando por fecha, estado y nombre o
+apellido del paciente, pudiendo combinar los criterios entre sí. La operación recorre las
+tres capas del sistema: el formulario del panel arma los parámetros, <code>api.js</code>
+los envía por <em>querystring</em>, el controlador los lee de <code>req.query</code> y el
+servicio construye con ellos una cláusula <code>WHERE</code> dinámica, siempre con
+consultas parametrizadas.
+</p>
+<p>
+El recorte por perfil se aplica <strong>después</strong> de los filtros enviados por el
+usuario, de manera que un paciente no puede ampliar su alcance indicando el documento de
+otra persona: el sistema continúa devolviendo únicamente sus propios turnos.
+</p>
+
+<h2>3. Gestión de perfiles, sesiones y permisos</h2>
+<p>
+Hasta esta entrega todas las rutas de turnos estaban reservadas al administrador. Se
+definieron permisos diferenciados para los tres perfiles, aplicados tanto en el servidor
+como en la interfaz.
+</p>
+
+<table>
+    <tr><th>Operación</th><th>Administrador</th><th>Médico</th><th>Paciente</th></tr>
+    <tr><td>Consultar turnos</td><td>Todos</td><td>Los de su servicio</td><td>Los propios</td></tr>
+    <tr><td>Crear, modificar y eliminar</td><td>Sí</td><td>No</td><td>No</td></tr>
+    <tr><td>Confirmar</td><td>Sí</td><td>Sí</td><td>No</td></tr>
+    <tr><td>Cancelar</td><td>Sí</td><td>Sí</td><td>Los propios</td></tr>
+</table>
+
+<p>El control se aplica en tres niveles sucesivos:</p>
+<ul>
+    <li><strong>Autenticación:</strong> sin un token JWT válido la petición se rechaza con 401.</li>
+    <li><strong>Autorización por rol:</strong> cada ruta declara qué perfiles pueden utilizarla; si no corresponde, responde 403.</li>
+    <li><strong>Pertenencia del registro:</strong> aunque el rol habilite la operación, se verifica que el turno pertenezca al usuario. Esto impide acceder a datos ajenos modificando el identificador en la dirección o enviando peticiones directamente a la API.</li>
+</ul>
+
+<h2>4. Archivos modificados</h2>
+
+<table>
+    <tr><th>Archivo</th><th>Modificación realizada</th></tr>
+    <tr><td><code>validators/turnoValidator.js</code></td><td>Las dos validaciones nuevas: compatibilidad del equipo y detección de superposición por duración.</td></tr>
+    <tr><td><code>services/turnoService.js</code></td><td>Filtros dinámicos en la consulta de turnos y funciones para determinar el servicio de un médico y de un turno.</td></tr>
+    <tr><td><code>controllers/controller.js</code></td><td>Recorte de datos según el perfil y verificación de pertenencia del turno.</td></tr>
+    <tr><td><code>routes/router.js</code></td><td>Cada ruta declara los roles habilitados, en lugar de restringir todo al administrador.</td></tr>
+    <tr><td><code>services/authService.js</code><br><code>controllers/authController.js</code></td><td>El token incorpora el documento del paciente y la matrícula del médico, datos necesarios para el recorte.</td></tr>
+    <tr><td><code>frontend/js/dashboard.js</code></td><td>Navegación del menú, formulario de filtros y adaptación de la pantalla al perfil.</td></tr>
+    <tr><td><code>frontend/pages/dashboard.html</code><br><code>frontend/css/estilos.css</code></td><td>Formulario de búsqueda y estilos de la tabla de turnos.</td></tr>
+    <tr><td><code>frontend/js/api.js</code></td><td>Envío de los filtros por querystring.</td></tr>
+</table>
+
+<div class="pagina-nueva"></div>
+
+<h2>5. Capturas del funcionamiento</h2>
+
+<div class="captura">
+    <img src="docs/capturas/2-admin.jpg" alt="Panel del administrador">
+    <div class="pie">Figura 1. Perfil <strong>administrador</strong>: accede a la totalidad de los turnos registrados (31).</div>
+</div>
+
+<div class="captura">
+    <img src="docs/capturas/4-medico.jpg" alt="Panel del medico">
+    <div class="pie">Figura 2. Perfil <strong>médico</strong>: el encabezado pasa a «Turnos de mi servicio» y solo aparecen los 4 turnos de Cardiología, el servicio al que pertenece.</div>
+</div>
+
+<div class="pagina-nueva"></div>
+
+<div class="captura">
+    <img src="docs/capturas/5-paciente.jpg" alt="Panel del paciente">
+    <div class="pie">Figura 3. Perfil <strong>paciente</strong>: el encabezado indica «Mis turnos» y únicamente se listan sus 2 turnos. El buscador por paciente se oculta, porque no le resulta aplicable.</div>
+</div>
+
+<div class="captura">
+    <img src="docs/capturas/3-filtros.jpg" alt="Busqueda y filtros">
+    <div class="pie">Figura 4. <strong>Búsqueda y filtros</strong>: al seleccionar el estado «Cancelado», el listado pasa de 31 a 5 turnos.</div>
+</div>
+
+<div class="pagina-nueva"></div>
+
+<div class="captura">
+    <img src="docs/capturas/6-validacion-registro.jpg" alt="Validacion informada en el frontend">
+    <div class="pie">Figura 5. <strong>Validación informada al usuario</strong>: al intentar registrar una cuenta con un correo ya utilizado, el sistema impide la operación y muestra el motivo.</div>
+</div>
+
+</body>
+</html>
