@@ -1,0 +1,394 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+.contenedor {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.tarjeta {
+    width: 100%;
+    max-width: 420px;
+    padding: 32px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px #00000015;
+}
+
+h1 {
+    margin-top: 0;
+    color: #002855;
+    font-size: 26px;
+}
+
+.tarjeta > p {
+    color: #666;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    background: #002855;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #004080;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+#mensaje {
+    overflow-wrap: anywhere;
+    margin-bottom: 0;
+}
+
+.pie-tarjeta {
+    margin-bottom: 0;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+    color: #666;
+    font-size: 14px;
+}
+
+.pie-tarjeta a {
+    color: #002855;
+    font-weight: bold;
+}
+
+
+/* Pestañas paciente / médico del registro */
+.pestanas {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.pestanas button {
+    flex: 1;
+    padding: 10px;
+    background: #eef1f6;
+    color: #4a5568;
+    font-size: 15px;
+}
+
+.pestanas button:hover {
+    background: #e2e7ef;
+}
+
+.pestanas button.activa {
+    background: #002855;
+    color: white;
+}
+
+.pestanas + form {
+    margin-top: 16px;
+}
+
+/* El flex del formulario solo alcanza a sus hijos directos, así que
+   los grupos de campos necesitan su propia columna. */
+form [data-campos] {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form [data-campos].oculta {
+    display: none;
+}
+
+
+/* ==============================
+   PANEL DE ADMINISTRACIÓN
+   ============================== */
+
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    padding: 24px 20px;
+    background: #002855;
+    color: white;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    font-size: 20px;
+    line-height: 1.3;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 28px;
+}
+
+.sidebar nav a {
+    padding: 11px 14px;
+    border-radius: 6px;
+    color: #cdd9e8;
+    text-decoration: none;
+}
+
+.sidebar nav a:hover {
+    background: #ffffff1a;
+    color: white;
+}
+
+.sidebar nav a.activo {
+    background: #ffffff26;
+    color: white;
+    font-weight: bold;
+    /* Barra a la izquierda para que se distinga del hover */
+    box-shadow: inset 3px 0 0 #7fb2ff;
+}
+
+/* El botón de la barra no usa el azul del formulario */
+.sidebar nav button {
+    margin-top: 18px;
+    background: transparent;
+    border: 1px solid #ffffff4d;
+    font-size: 15px;
+}
+
+.sidebar nav button:hover {
+    background: #ffffff1a;
+}
+
+.contenido {
+    flex: 1;
+    padding: 32px;
+    min-width: 0;
+}
+
+.encabezado {
+    padding-bottom: 18px;
+    border-bottom: 1px solid #ddd;
+}
+
+.encabezado h1 {
+    margin-bottom: 6px;
+}
+
+#datosUsuario {
+    margin: 0;
+    color: #666;
+}
+
+.bienvenida,
+.seccion-turnos {
+    margin-top: 24px;
+    padding: 24px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px #00000015;
+}
+
+.bienvenida h2,
+.seccion-turnos h2 {
+    margin-top: 0;
+    color: #002855;
+    font-size: 20px;
+}
+
+/* Las secciones del panel se alternan desde dashboard.js */
+.oculta {
+    display: none;
+}
+
+
+/* ==============================
+   TABLA DE TURNOS
+   ============================== */
+
+/* Barra de búsqueda y filtros.
+   flex-direction en fila porque la regla general de `form` la pone
+   en columna, y acá los filtros van uno al lado del otro. */
+.filtros {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    margin: 0 0 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #eee;
+}
+
+.filtros > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.filtros label {
+    color: #666;
+    font-size: 13px;
+}
+
+.filtros input,
+.filtros select {
+    margin: 0;
+    padding: 9px 10px;
+    font-size: 14px;
+}
+
+.filtros-botones {
+    flex-direction: row !important;
+    gap: 8px;
+}
+
+.filtros button {
+    padding: 10px 18px;
+    font-size: 14px;
+}
+
+.filtros button.secundario {
+    background: #eef1f6;
+    color: #4a5568;
+}
+
+.filtros button.secundario:hover {
+    background: #e2e7ef;
+}
+
+.resumen {
+    margin: 0 0 14px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Permite desplazar la tabla sin romper el ancho de la tarjeta */
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+.tabla-turnos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tabla-turnos th,
+.tabla-turnos td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+}
+
+/* Fecha y hora angostas; paciente y práctica se llevan el resto */
+.tabla-turnos th:nth-child(1),
+.tabla-turnos th:nth-child(2) {
+    width: 1%;
+}
+
+.tabla-turnos td:nth-child(1),
+.tabla-turnos td:nth-child(2) {
+    font-variant-numeric: tabular-nums;
+    color: #444;
+}
+
+.tabla-turnos th:nth-child(6),
+.tabla-turnos td:nth-child(6) {
+    width: 1%;
+}
+
+.tabla-turnos th {
+    color: #002855;
+    border-bottom: 2px solid #ddd;
+}
+
+.tabla-turnos tbody tr:hover {
+    background: #f7f9fc;
+}
+
+/* Los turnos que ya pasaron, atenuados */
+.tabla-turnos tr.pasado td {
+    color: #999;
+}
+
+.estado {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.estado.confirmado {
+    background: #e3f5e8;
+    color: #1d6b38;
+}
+
+.estado.reservado {
+    background: #e7eefc;
+    color: #244a9c;
+}
+
+.estado.cancelado {
+    background: #fbe6e6;
+    color: #9c2424;
+}
+
+.sin-datos,
+.cargando {
+    color: #666;
+}
+
+.error-carga {
+    color: #9c2424;
+}
+
+
+/* En pantallas chicas la barra pasa arriba */
+@media (max-width: 700px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .contenido {
+        padding: 20px;
+    }
+}

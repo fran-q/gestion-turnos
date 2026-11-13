@@ -1,0 +1,27 @@
+# ============================================================
+# Archivos que NO se suben al repositorio
+# ============================================================
+
+# Dependencias: se reinstalan con "npm install", no hace falta subirlas
+node_modules/
+
+# Credenciales: datos de la base y la clave de firma de los tokens
+.env
+*.env
+backend/.env
+
+# Apuntes personales: contienen contraseñas en texto plano
+apuntes.md
+
+# Archivos temporales del sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Configuración local del editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

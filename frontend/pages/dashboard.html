@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de administración | Gestión de Turnos</title>
+    <link rel="stylesheet" href="../css/estilos.css"> 
+</head>
+<body>
+
+
+    <div class="dashboard">
+
+
+        <aside class="sidebar">
+            <h2>Gestión de Turnos</h2>
+
+
+            <!-- data-seccion indica qué sección muestra cada enlace.
+                 La clase .activo la maneja dashboard.js. -->
+            <nav id="menu">
+                <a href="#inicio" data-seccion="inicio" class="activo">Inicio</a>
+                <a href="#turnos" data-seccion="turnos">Turnos</a>
+                <button id="cerrarSesion" type="button">
+                    Cerrar sesión
+                </button>
+            </nav>
+        </aside>
+
+
+        <main class="contenido">
+            <header class="encabezado">
+                <h1>Panel principal</h1>
+                <p id="datosUsuario">Cargando usuario...</p>
+            </header>
+
+
+            <!-- Las dos secciones se alternan desde dashboard.js.
+                 data-seccion las vincula con los enlaces del menú. -->
+            <section id="inicio" data-seccion="inicio" class="bienvenida">
+                <h2>Bienvenida/o al sistema</h2>
+                <p>Desde aquí podrás gestionar los turnos médicos.</p>
+            </section>
+
+
+            <section id="turnos" data-seccion="turnos" class="seccion-turnos oculta">
+                <h2>Gestión de turnos</h2>
+
+                <!-- Búsqueda y filtros: arman el querystring del GET -->
+                <form id="filtros" class="filtros">
+                    <div>
+                        <label for="filtroFecha">Fecha</label>
+                        <input type="date" id="filtroFecha">
+                    </div>
+
+                    <div>
+                        <label for="filtroEstado">Estado</label>
+                        <select id="filtroEstado">
+                            <option value="">Todos</option>
+                            <option value="Reservado">Reservado</option>
+                            <option value="Confirmado">Confirmado</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="filtroTexto">Paciente</label>
+                        <input type="text" id="filtroTexto" placeholder="Nombre o apellido">
+                    </div>
+
+                    <div class="filtros-botones">
+                        <button type="submit">Buscar</button>
+                        <button type="button" id="limpiarFiltros" class="secundario">Limpiar</button>
+                    </div>
+                </form>
+
+                <div id="listaTurnos"></div>
+            </section>
+        </main>
+
+
+    </div>
+
+
+    <script src="../js/api.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>
